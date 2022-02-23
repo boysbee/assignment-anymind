@@ -29,7 +29,7 @@ internal class HistoryControllerTest {
     @Test
     fun `history with valid request should be successfully`() {
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/history")
+            MockMvcRequestBuilders.get("/api/wallet/history")
             .contentType(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().isOk)
             .andExpect(MockMvcResultMatchers.content().json("""{ "code" : 0, "message" : "success"}"""))

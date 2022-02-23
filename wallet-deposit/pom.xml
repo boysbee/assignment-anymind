@@ -18,7 +18,6 @@
 		<kotlin.version>1.6.10</kotlin.version>
 		<jackson-databind.version>2.12.4</jackson-databind.version>
 		<io.mockk.version>1.9.3</io.mockk.version>
-		<javax.validation.version>2.0.1.Final</javax.validation.version>
 		<jackson.module.kotlin.version>2.11.0</jackson.module.kotlin.version>
 	</properties>
 	<dependencies>
