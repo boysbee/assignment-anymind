@@ -1,0 +1,50 @@
+version: "3.6"
+
+services:
+  wallet-deposit-app:
+    container_name: wallet-deposit-app
+    image: 'wallet-deposit:latest'
+    build:
+      context: wallet-deposit
+      dockerfile: Dockerfile
+    ports:
+      - 18888:8080
+    networks:
+      - assignment-network
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+  wallet-history-app:
+    container_name: wallet-history-app
+    image: 'wallet-history:latest'
+    build:
+      context: wallet-history
+      dockerfile: Dockerfile
+    ports:
+      - 18881:8081
+    networks:
+      - assignment-network
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/compose-postgres
+      - SPRING_DATASOURCE_USERNAME=compose-postgres
+      - SPRING_DATASOURCE_PASSWORD=compose-postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+  db:
+    image: 'postgres:14-alpine'
+    container_name: db
+    ports:
+      - 5432:5432
+    networks:
+      - assignment-network
+    environment:
+      - POSTGRES_USER=compose-postgres
+      - POSTGRES_PASSWORD=compose-postgres
+networks:
+    assignment-network:
+        driver: bridge
