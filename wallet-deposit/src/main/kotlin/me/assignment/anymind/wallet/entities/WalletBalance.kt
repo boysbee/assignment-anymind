@@ -17,4 +17,4 @@ class WalletBalance(
 
     @Column(nullable = false, name = "transaction_date")
     val transactionDate: Timestamp
-)
+): java.io.Serializable
