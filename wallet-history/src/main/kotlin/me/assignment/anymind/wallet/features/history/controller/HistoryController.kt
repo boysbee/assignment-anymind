@@ -26,7 +26,7 @@ class HistoryController(val walletService: WalletService) {
         endDatetime: ZonedDateTime
     ): ResponseEntity<List<TransactionHistory>> {
         logger.info("Received request to get history by startDateTime $startDatetime : endDateTime : $endDatetime")
-        val response = walletService.findHistory(startDatetime.toLocalDateTime(),endDatetime.toLocalDateTime())
+        val response = walletService.findBalanceHistory(startDatetime.toLocalDateTime(),endDatetime.toLocalDateTime())
         return ResponseEntity.ok(response).also {
             logger.info("Response history by $response")
         }

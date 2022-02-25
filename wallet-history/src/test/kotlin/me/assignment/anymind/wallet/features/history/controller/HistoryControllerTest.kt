@@ -34,7 +34,7 @@ internal class HistoryControllerTest {
 
     @Test
     fun `history with valid request should be successfully`() {
-        every { walletService.findHistory(any(),any()) } returns listOf(
+        every { walletService.findBalanceHistory(any(),any()) } returns listOf(
             TransactionHistory(
                 datetime = ZonedDateTime.now(ZoneId.of("UTC")),
                 amount = BigDecimal.valueOf(1000)
