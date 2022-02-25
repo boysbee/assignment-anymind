@@ -1,17 +1,13 @@
 package me.assignment.anymind.wallet.services
 
-import io.mockk.MockK
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.unmockkAll
+import io.mockk.*
 import me.assignment.anymind.wallet.entities.WalletBalance
 import me.assignment.anymind.wallet.features.history.models.TransactionHistory
 import me.assignment.anymind.wallet.repositories.WalletBalanceRepository
-import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.assertThrows
+import java.sql.SQLDataException
 import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.time.ZonedDateTime
@@ -32,7 +28,7 @@ internal class WalletServiceTest {
     }
 
     @Test
-    fun `find balance history successfully`() {
+    fun `should return list of history when find balance history successfully`() {
 
         val startDatetime = LocalDateTime.now().plusDays(-1)
         val endDateTime = LocalDateTime.now().plusDays(1)
@@ -59,7 +55,7 @@ internal class WalletServiceTest {
 
 
     @Test
-    fun `find balance history not found should be empty list`() {
+    fun `should return empty list when not found exist data`() {
 
         val startDatetime = LocalDateTime.now().plusDays(-1)
         val endDateTime = LocalDateTime.now().plusDays(1)
@@ -70,6 +66,24 @@ internal class WalletServiceTest {
             startDatetime, endDateTime
         )
         assertTrue(list.isEmpty())
+    }
+
+    @Test
+    fun `should throw exception when find balance history fail`() {
+
+        val startDatetime = LocalDateTime.now().plusDays(-1)
+        val endDateTime = LocalDateTime.now().plusDays(1)
+        every {
+            walletBalanceRepository.findBalanceByTransactionDateAndGroupByHours(
+                any(),
+                any()
+            )
+        } throws SQLDataException()
+        walletService.findBalanceHistory(
+            startDatetime, endDateTime
+        ).run {
+            assertTrue(this.isEmpty())
+        }
     }
 
 }

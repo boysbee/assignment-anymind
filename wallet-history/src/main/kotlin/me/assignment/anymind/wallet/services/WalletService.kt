@@ -17,15 +17,21 @@ import java.util.*
 class WalletService(
     private val walletBalanceRepository: WalletBalanceRepository
 ) {
+    private val logger = LoggerFactory.getLogger(this::class.java)
     fun findBalanceHistory(startDate: LocalDateTime, endDateTime: LocalDateTime): List<TransactionHistory> {
-        return walletBalanceRepository.findBalanceByTransactionDateAndGroupByHours(
-            Timestamp.valueOf(startDate), Timestamp.valueOf(endDateTime)
-        ).groupBy { it.transactionDate }
-            .map {
-                TransactionHistory(
-                    datetime = ZonedDateTime.of(it.key.toLocalDateTime(), ZoneId.of("UTC")),
-                    amount = it.value.last().balance
-                )
-            }.toList()
+        return try {
+            walletBalanceRepository.findBalanceByTransactionDateAndGroupByHours(
+                Timestamp.valueOf(startDate), Timestamp.valueOf(endDateTime)
+            ).groupBy { it.transactionDate }
+                .map {
+                    TransactionHistory(
+                        datetime = ZonedDateTime.of(it.key.toLocalDateTime(), ZoneId.of("UTC")),
+                        amount = it.value.last().balance
+                    )
+                }.toList()
+        } catch (ex: Exception) {
+            logger.warn("Error : %s".format(ex.message), ex)
+            listOf()
+        }
     }
 }
