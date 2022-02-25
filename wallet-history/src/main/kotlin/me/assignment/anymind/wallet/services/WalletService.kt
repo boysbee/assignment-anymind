@@ -15,7 +15,6 @@ import java.util.*
 
 @Service
 class WalletService(
-    private val walletTransactionRepository: WalletTransactionRepository,
     private val walletBalanceRepository: WalletBalanceRepository
 ) {
     fun findBalanceHistory(startDate: LocalDateTime, endDateTime: LocalDateTime): List<TransactionHistory> {
