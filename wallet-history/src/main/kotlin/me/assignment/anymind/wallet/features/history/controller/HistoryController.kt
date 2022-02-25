@@ -1,6 +1,7 @@
 package me.assignment.anymind.wallet.features.history.controller
 
 import me.assignment.anymind.wallet.features.history.models.TransactionHistory
+import me.assignment.anymind.wallet.services.WalletService
 import org.slf4j.LoggerFactory
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.MediaType
@@ -12,7 +13,7 @@ import java.time.ZonedDateTime
 
 @RestController
 @RequestMapping("/api/wallet/history")
-class HistoryController {
+class HistoryController(val walletService: WalletService) {
     private val logger = LoggerFactory.getLogger(this::class.java)
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
@@ -25,16 +26,7 @@ class HistoryController {
         endDatetime: ZonedDateTime
     ): ResponseEntity<List<TransactionHistory>> {
         logger.info("Received request to get history by startDateTime $startDatetime : endDateTime : $endDatetime")
-        val response = listOf(
-            TransactionHistory(
-                datetime = ZonedDateTime.now(ZoneId.of("UTC")),
-                amount = BigDecimal.valueOf(1000)
-            ),
-            TransactionHistory(
-                datetime = ZonedDateTime.now(ZoneId.of("UTC")),
-                amount = BigDecimal.valueOf(1001.1)
-            )
-        )
+        val response = walletService.findHistory(startDatetime.toLocalDateTime(),endDatetime.toLocalDateTime())
         return ResponseEntity.ok(response).also {
             logger.info("Response history by $response")
         }

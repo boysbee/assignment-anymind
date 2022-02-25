@@ -1,23 +1,29 @@
 package me.assignment.anymind.wallet.features.history.controller
 
+import io.mockk.every
+import io.mockk.mockk
+import me.assignment.anymind.wallet.features.history.models.TransactionHistory
+import me.assignment.anymind.wallet.services.WalletService
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
+import java.math.BigDecimal
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 internal class HistoryControllerTest {
 
     private lateinit var mockMvc: MockMvc
     private lateinit var historyController: HistoryController
+    private val walletService: WalletService = mockk()
 
     @BeforeEach
     fun setUp() {
-        historyController = HistoryController()
+        historyController = HistoryController(walletService)
         mockMvc = MockMvcBuilders.standaloneSetup(historyController).build()
     }
 
@@ -28,6 +34,16 @@ internal class HistoryControllerTest {
 
     @Test
     fun `history with valid request should be successfully`() {
+        every { walletService.findHistory(any(),any()) } returns listOf(
+            TransactionHistory(
+                datetime = ZonedDateTime.now(ZoneId.of("UTC")),
+                amount = BigDecimal.valueOf(1000)
+            ),
+            TransactionHistory(
+                datetime = ZonedDateTime.now(ZoneId.of("UTC")),
+                amount = BigDecimal.valueOf(1001.1)
+            )
+        )
         mockMvc.perform(
             MockMvcRequestBuilders.get("/api/wallet/history?startDatetime=2011-10-05T10:48:01+00:00&endDatetime=2011-10-05T18:48:02+00:00"))
             .andExpect(MockMvcResultMatchers.status().isOk)
