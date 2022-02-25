@@ -1,0 +1,15 @@
+@startuml
+
+actor client
+participant wallet_deposit as d
+participant database as db
+
+
+client -> d: send request to save record
+d -> d: recieved and send to save wallet event
+d -> client: response created save record
+
+d --> d: listener event to save record
+d --> db: send to save wall transaction and update current balance
+
+@enduml

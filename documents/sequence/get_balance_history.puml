@@ -1,0 +1,13 @@
+@startuml
+
+actor client
+participant wallet_history as h
+participant database as db
+
+
+client -> h: send request to get balance history
+h -> db: recieved and send to save wallet event
+db -> h: return result of history balance
+h -> client: response history of balance of each hour
+
+@enduml
