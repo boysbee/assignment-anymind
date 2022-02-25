@@ -41,7 +41,7 @@ internal class DepositControllerTest {
     @Test
     fun `deposit with valid request should be successfully`() {
         mockMvc.perform(
-            post("/api/wallet/deposit")
+            post("/api/wallet")
                 .content(
                     """{
                     "datetime": "2019-10-05T14:48:01+01:00",
@@ -57,7 +57,7 @@ internal class DepositControllerTest {
     @Test
     fun `should be found bad request when datetime is empty`() {
         mockMvc.perform(
-            post("/api/wallet/deposit").content(
+            post("/api/wallet").content(
                 """{
                     "datetime": "",
                     "amount": 1.1
@@ -72,7 +72,7 @@ internal class DepositControllerTest {
     @Test
     fun `should be found bad request when datetime is null value`() {
         mockMvc.perform(
-            post("/api/wallet/deposit").content(
+            post("/api/wallet").content(
                 """{
                     "datetime": "",
                     "amount": 1.1
@@ -87,7 +87,7 @@ internal class DepositControllerTest {
     @Test
     fun `should be found bad request when datetime field is missing`() {
         mockMvc.perform(
-            post("/api/wallet/deposit").content(
+            post("/api/wallet").content(
                 """{
                     "amount": 1.1
                }"""
@@ -101,7 +101,7 @@ internal class DepositControllerTest {
     @Test
     fun `should be found bad request when amount is null value`() {
         mockMvc.perform(
-            post("/api/wallet/deposit").content(
+            post("/api/wallet").content(
                 """{
                     "datetime": "2019-10-05T14:48:01+01:00",
                     "amount": null
@@ -116,7 +116,7 @@ internal class DepositControllerTest {
     @Test
     fun `should be found bad request when amount is less than zero value`() {
         mockMvc.perform(
-            post("/api/wallet/deposit").content(
+            post("/api/wallet").content(
                 """{
                     "datetime": "2019-10-05T14:48:01+01:00",
                     "amount": -10.0
@@ -131,7 +131,7 @@ internal class DepositControllerTest {
     @Test
     fun `should be found bad request when amount is more than 9999999999_99999 value`() {
         mockMvc.perform(
-            post("/api/wallet/deposit").content(
+            post("/api/wallet").content(
                 """{
                     "datetime": "2019-10-05T14:48:01+01:00",
                     "amount": 19999999999.99999
@@ -147,7 +147,7 @@ internal class DepositControllerTest {
     fun `should be repsonse internal server error when caught something exception`(){
         every { saveWalletTransactionsPublisher.createTransaction(any()) } throws IllegalAccessException()
         mockMvc.perform(
-            post("/api/wallet/deposit")
+            post("/api/wallet")
                 .content(
                     """{
                     "datetime": "2019-10-05T14:48:01+01:00",
