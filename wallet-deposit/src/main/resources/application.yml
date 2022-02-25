@@ -12,3 +12,15 @@ management:
       path-mapping:
         health: "health"
         info: "info"
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: none
+  datasource:
+    url: jdbc:postgresql://localhost:5432/compose-postgres
+    username: compose-postgres
+    password: compose-postgres
+    hikari:
+      connectionTimeout: 20000
+      maximumPoolSize: 5

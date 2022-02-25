@@ -1,7 +1,9 @@
 package me.assignment.anymind.wallet.features.deposit.controllers
 
+import me.assignment.anymind.wallet.events.TransactionEvent
 import me.assignment.anymind.wallet.features.deposit.models.DepositRequest
 import me.assignment.anymind.wallet.features.deposit.models.DepositResponse
+import me.assignment.anymind.wallet.services.SaveWalletTransactionsPublisher
 import org.slf4j.LoggerFactory
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -10,7 +12,7 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/api/wallet")
-class DepositController {
+class DepositController(private val saveWalletTransactionsPublisher: SaveWalletTransactionsPublisher) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     @PostMapping("/deposit", produces = [MediaType.APPLICATION_JSON_VALUE])
@@ -21,6 +23,16 @@ class DepositController {
             code = 0,
             message = "success"
         )
+        logger.info("Send event save transaction ...")
+        this.saveWalletTransactionsPublisher.createTransaction(
+            TransactionEvent(
+                this,
+                transactionDate = request.datetime,
+                amount = request.amount
+            )
+        ).also {
+            logger.info("End send event save transaction ..")
+        }
         return ResponseEntity.ok(response).also {
             logger.info("Response $response")
         }
