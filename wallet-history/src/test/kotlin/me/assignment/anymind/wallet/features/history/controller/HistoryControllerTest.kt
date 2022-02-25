@@ -45,35 +45,35 @@ internal class HistoryControllerTest {
             )
         )
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/wallet/history?startDatetime=2011-10-05T10:48:01+00:00&endDatetime=2011-10-05T18:48:02+00:00"))
+            MockMvcRequestBuilders.get("/api/wallet?startDatetime=2011-10-05T10:48:01+00:00&endDatetime=2011-10-05T18:48:02+00:00"))
             .andExpect(MockMvcResultMatchers.status().isOk)
     }
 
     @Test
     fun `should be bad request when parameter "startDatetime" is empty`() {
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/wallet/history?startDatetime=&endDatetime=2011-10-05T18:48:02+00:00"))
+            MockMvcRequestBuilders.get("/api/wallet?startDatetime=&endDatetime=2011-10-05T18:48:02+00:00"))
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 
     @Test
     fun `should be bad request when parameter "startDatetime" is invalid format date`() {
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/wallet/history?startDatetime=2011-10-05&endDatetime=2011-10-05T18:48:02+00:00"))
+            MockMvcRequestBuilders.get("/api/wallet?startDatetime=2011-10-05&endDatetime=2011-10-05T18:48:02+00:00"))
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 
     @Test
     fun `should be bad request when parameter "endDatetime" is empty`() {
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/wallet/history?startDatetime=2011-10-05T10:48:01+00:00&endDatetime="))
+            MockMvcRequestBuilders.get("/api/wallet?startDatetime=2011-10-05T10:48:01+00:00&endDatetime="))
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 
     @Test
     fun `should be bad request when parameter "endDatetime" is invalid format date`() {
         mockMvc.perform(
-            MockMvcRequestBuilders.get("/api/wallet/history?startDatetime=2011-10-05T10:48:01+00:00&endDatetime=2011-10-05"))
+            MockMvcRequestBuilders.get("/api/wallet?startDatetime=2011-10-05T10:48:01+00:00&endDatetime=2011-10-05"))
             .andExpect(MockMvcResultMatchers.status().isBadRequest)
     }
 }

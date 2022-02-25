@@ -12,7 +12,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 
 @RestController
-@RequestMapping("/api/wallet/history")
+@RequestMapping("/api/wallet")
 class HistoryController(val walletService: WalletService) {
     private val logger = LoggerFactory.getLogger(this::class.java)
     @GetMapping(produces = [MediaType.APPLICATION_JSON_VALUE])
