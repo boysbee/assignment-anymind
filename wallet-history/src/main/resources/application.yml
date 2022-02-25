@@ -1,4 +1,6 @@
 server:
+  servlet:
+    context-path: /wallet-history
   port: 8081
 
 management:

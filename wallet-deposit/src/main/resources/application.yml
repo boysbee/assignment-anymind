@@ -1,4 +1,6 @@
 server:
+  servlet:
+    context-path: /wallet-deposit
   port: 8080
 
 management:
