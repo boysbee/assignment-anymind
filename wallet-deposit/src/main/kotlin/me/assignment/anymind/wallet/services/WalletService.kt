@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.sql.Timestamp
 import java.util.*
+import javax.transaction.Transactional
 
 @Service
 class WalletService(
@@ -16,6 +17,7 @@ class WalletService(
     private val walletTransactionRepository: WalletTransactionRepository
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
+    @Transactional
     fun saveTransaction(transactionDate: Timestamp, amount: BigDecimal) {
         val lastBalance = walletBalanceRepository.findTheLastBalance()
         walletTransactionRepository.save(
