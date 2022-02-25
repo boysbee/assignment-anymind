@@ -16,7 +16,7 @@ import javax.validation.Valid
 class DepositController(private val saveWalletTransactionsPublisher: SaveWalletTransactionsPublisher) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    @PostMapping("/deposit", produces = [MediaType.APPLICATION_JSON_VALUE])
+    @PostMapping( produces = [MediaType.APPLICATION_JSON_VALUE])
     @ResponseBody
     fun deposit(@Valid @RequestBody request: DepositRequest): ResponseEntity<DepositResponse> {
         logger.info("Received request $request")
