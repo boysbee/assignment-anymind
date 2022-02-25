@@ -1,8 +1,5 @@
 # assignment-anymind
 
-## Design
-
-
 ### Prerequisites
 - JDK 11
 - Docker
@@ -53,6 +50,14 @@ docker-compose up --build
 ### Features
 - Save record
 - Get history of your wallet balance at the end of each `hour` between two dates
+
+### Design
+
+#### Save Record
+![Save Record](https://github.com/boysbee/assignt-anymind/documents/sequence/main/save-record.png?raw=true)
+#### Show wallet balance history of each `hour`
+![Show balance](https://github.com/boysbee/assignt-anymind/documents/sequence/main/get_balance_history.png?raw=true)
+
 
 ### Usage API
 - Deposit coin
