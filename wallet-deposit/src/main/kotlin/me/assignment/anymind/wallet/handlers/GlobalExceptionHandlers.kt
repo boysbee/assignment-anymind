@@ -46,6 +46,19 @@ class GlobalExceptionHandlers {
         ))
     }
 
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(Exception::class)
+    fun handleGeneralException(
+        ex: Exception
+    ): ResponseEntity<DepositResponse> {
+        logger.warn(ex.message)
+        return ResponseEntity.internalServerError().body(DepositResponse(
+            code = HttpStatus.INTERNAL_SERVER_ERROR.value(),
+            message = "Internal server error"
+        ))
+    }
+
     private fun findFieldInError(message: String?): String {
         val field = message?.let {
             it.substring(it.lastIndexOf("[") + 1,it.lastIndexOf("]")).replace("\"","")

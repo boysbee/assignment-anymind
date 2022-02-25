@@ -5,6 +5,7 @@ import me.assignment.anymind.wallet.features.deposit.models.DepositRequest
 import me.assignment.anymind.wallet.features.deposit.models.DepositResponse
 import me.assignment.anymind.wallet.services.SaveWalletTransactionsPublisher
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -19,11 +20,6 @@ class DepositController(private val saveWalletTransactionsPublisher: SaveWalletT
     @ResponseBody
     fun deposit(@Valid @RequestBody request: DepositRequest): ResponseEntity<DepositResponse> {
         logger.info("Received request $request")
-        val response = DepositResponse(
-            code = 0,
-            message = "success"
-        )
-        logger.info("Send event save transaction ...")
         this.saveWalletTransactionsPublisher.createTransaction(
             TransactionEvent(
                 this,
@@ -33,8 +29,11 @@ class DepositController(private val saveWalletTransactionsPublisher: SaveWalletT
         ).also {
             logger.info("End send event save transaction ..")
         }
-        return ResponseEntity.ok(response).also {
-            logger.info("Response $response")
+        return ResponseEntity(DepositResponse(
+            code = HttpStatus.CREATED.value(),
+            message = "success"
+        ), HttpStatus.CREATED).also {
+            logger.info("Response $it")
         }
     }
 }

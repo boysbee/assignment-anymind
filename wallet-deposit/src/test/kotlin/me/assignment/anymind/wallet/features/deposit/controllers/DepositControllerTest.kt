@@ -1,12 +1,15 @@
 package me.assignment.anymind.wallet.features.deposit.controllers
 
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import me.assignment.anymind.wallet.handlers.GlobalExceptionHandlers
-import org.hamcrest.CoreMatchers.containsString
+import me.assignment.anymind.wallet.services.SaveWalletTransactionsPublisher
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
@@ -18,13 +21,16 @@ internal class DepositControllerTest {
 
     private lateinit var mockMvc: MockMvc
     private lateinit var depositController: DepositController
+    private val saveWalletTransactionsPublisher: SaveWalletTransactionsPublisher = mockk()
 
     @BeforeEach
     fun setUp() {
-        depositController = DepositController()
+        depositController = DepositController(saveWalletTransactionsPublisher)
         mockMvc = standaloneSetup(depositController)
             .setControllerAdvice(GlobalExceptionHandlers())
             .build()
+
+        every { saveWalletTransactionsPublisher.createTransaction(any()) } just Runs
     }
 
     @AfterEach
@@ -44,8 +50,8 @@ internal class DepositControllerTest {
                 )
                 .contentType(MediaType.APPLICATION_JSON)
         )
-            .andExpect(status().isOk)
-            .andExpect(content().json("""{ "code" : 0, "message" : "success"}"""))
+            .andExpect(status().isCreated)
+            .andExpect(content().json("""{ "code" : ${HttpStatus.CREATED.value()}, "message" : "success"}"""))
     }
 
     @Test
@@ -135,5 +141,22 @@ internal class DepositControllerTest {
         )
             .andExpect(status().isBadRequest)
             .andExpect(content().json("""{ "code" : 400, "message" : "[amount is The decimal value can not be more than 9999999999.99999]"}"""))
+    }
+
+    @Test
+    fun `should be repsonse internal server error when caught something exception`(){
+        every { saveWalletTransactionsPublisher.createTransaction(any()) } throws IllegalAccessException()
+        mockMvc.perform(
+            post("/api/wallet/deposit")
+                .content(
+                    """{
+                    "datetime": "2019-10-05T14:48:01+01:00",
+                    "amount": 1.1
+               }"""
+                )
+                .contentType(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isInternalServerError)
+            .andExpect(content().json("""{ "code" : ${HttpStatus.INTERNAL_SERVER_ERROR.value()}, "message" : "Internal server error"}"""))
     }
 }
