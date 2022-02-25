@@ -1,0 +1,32 @@
+package me.assignment.anymind.wallet.services
+
+import me.assignment.anymind.wallet.features.history.models.TransactionHistory
+import me.assignment.anymind.wallet.repositories.WalletBalanceRepository
+import me.assignment.anymind.wallet.repositories.WalletTransactionRepository
+import org.slf4j.LoggerFactory
+import org.springframework.stereotype.Service
+import java.math.BigDecimal
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.util.*
+
+@Service
+class WalletService(
+    private val walletTransactionRepository: WalletTransactionRepository,
+    private val walletBalanceRepository: WalletBalanceRepository
+) {
+    fun findBalanceHistory(startDate: LocalDateTime, endDateTime: LocalDateTime): List<TransactionHistory> {
+        return walletBalanceRepository.findBalanceByTransactionDateAndGroupByHours(
+            Timestamp.valueOf(startDate), Timestamp.valueOf(endDateTime)
+        ).groupBy { it.transactionDate }
+            .map {
+                TransactionHistory(
+                    datetime = ZonedDateTime.of(it.key.toLocalDateTime(), ZoneId.of("UTC")),
+                    amount = it.value.last().balance
+                )
+            }.toList()
+    }
+}

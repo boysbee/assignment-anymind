@@ -1,6 +1,6 @@
 package me.assignment.anymind.wallet.handlers
 
-import me.assignment.anymind.wallet.features.history.controller.CommonResponse
+import me.assignment.anymind.wallet.features.history.models.CommonResponse
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
